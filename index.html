@@ -881,6 +881,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadTheme();
             loadAddPlayerVisibility();
+            checkPWAInstalled();
             
             const savedPlayers = localStorage.getItem('umActuallyPlayers');
             if (savedPlayers) {
@@ -895,6 +896,24 @@
                 }
             });
         });
+
+        // Check if app is installed as PWA and hide notice if it is
+        function checkPWAInstalled() {
+            const pwaNotice = document.querySelector('.pwa-notice');
+            
+            // Check if running in standalone mode (installed PWA)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            
+            // Check for iOS Safari standalone mode
+            const isIOSStandalone = window.navigator.standalone === true;
+            
+            // Hide the notice if app is installed
+            if (isStandalone || isIOSStandalone) {
+                if (pwaNotice) {
+                    pwaNotice.style.display = 'none';
+                }
+            }
+        }
 
         function savePlayers() {
             localStorage.setItem('umActuallyPlayers', JSON.stringify(players));
@@ -1119,7 +1138,7 @@
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
+                navigator.serviceWorker.register('service-worker.js')
                     .then(registration => console.log('Service Worker registered'))
                     .catch(err => console.log('Service Worker registration failed:', err));
             });
