@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#FF6B6B">
+    <meta name="description" content="Score tracker for Um, Actually trivia game show">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Um, Actually">
+    <link rel="manifest" href="manifest.json">
     <title>Um, Actually - Score Tracker</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Score tracker for Um, Actually trivia game show">
+    <meta name="theme-color" content="#FF6B6B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Um, Actually">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;700;900&family=Sixtyfour:wght@400&display=swap" rel="stylesheet">
     <style>
         * {
@@ -306,9 +322,25 @@
             width: 100%;
         }
 
+        .led-number.double-digit {
+            font-size: 28vw;
+        }
+
+        .led-number.triple-digit {
+            font-size: 22vw;
+        }
+
         @media (min-width: 768px) {
             .led-number {
                 font-size: 28rem;
+            }
+            
+            .led-number.double-digit {
+                font-size: 22rem;
+            }
+            
+            .led-number.triple-digit {
+                font-size: 16rem;
             }
         }
 
@@ -1023,12 +1055,22 @@
             container.innerHTML = players.map((player, index) => {
                 const colorClass = colors[index % colors.length];
                 const isNewPlayer = player.id === newlyAddedPlayerId ? 'new-player' : '';
+                
+                // Add class based on number of digits for responsive sizing
+                let digitClass = '';
+                const scoreStr = player.score.toString();
+                if (scoreStr.length >= 3) {
+                    digitClass = 'triple-digit';
+                } else if (scoreStr.length === 2) {
+                    digitClass = 'double-digit';
+                }
+                
                 return `
                 <div class="player-card ${isNewPlayer}">
                     <div class="player-podium-top">
                         <div class="player-name">${escapeHtml(player.name)}</div>
                         <div class="led-display">
-                            <div class="led-number">${player.score}</div>
+                            <div class="led-number ${digitClass}">${player.score}</div>
                         </div>
                     </div>
                     <div class="player-color-panel color-${colorClass}">
@@ -1053,6 +1095,15 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
         }
     </script>
 </body>
