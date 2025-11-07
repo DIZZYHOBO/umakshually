@@ -1,6 +1,6 @@
 const CACHE_NAME = 'um-actually-v1';
 const urlsToCache = [
-  './um-actually-scorer.html',
+  './index.html',
   './manifest.json'
 ];
 
