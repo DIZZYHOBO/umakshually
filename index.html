@@ -12,6 +12,58 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-primary: rgba(255, 255, 255, 0.85);
+            --bg-secondary: white;
+            --text-primary: #2C3E50;
+            --text-secondary: #555;
+            --input-bg: white;
+            --input-border: #4169E1;
+            --input-text: #2C3E50;
+            --empty-state-bg: rgba(240, 240, 240, 0.5);
+            --empty-state-border: #ccc;
+            --empty-state-text: #666;
+            --podium-top: #2C3E50;
+            --podium-bottom: #34495E;
+            --winner-bg: white;
+            --winner-border: #FF6B6B;
+        }
+
+        body.dark-mode {
+            --bg-primary: rgba(30, 30, 40, 0.85);
+            --bg-secondary: #1e1e28;
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --input-bg: #2a2a35;
+            --input-border: #4169E1;
+            --input-text: #f0f0f0;
+            --empty-state-bg: rgba(40, 40, 50, 0.5);
+            --empty-state-border: #555;
+            --empty-state-text: #999;
+            --podium-top: #1a1a22;
+            --podium-bottom: #25252f;
+            --winner-bg: #1e1e28;
+            --winner-border: #FF6B6B;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, 
+                #8B0000 0%, 
+                #8B0000 14%, 
+                #B8860B 14%, 
+                #B8860B 28%, 
+                #DAA520 28%, 
+                #DAA520 42%, 
+                #228B22 42%, 
+                #228B22 56%, 
+                #006B7D 56%, 
+                #006B7D 70%, 
+                #1E3A8A 70%, 
+                #1E3A8A 84%, 
+                #6B1B9A 84%, 
+                #6B1B9A 100%);
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, 
@@ -61,7 +113,7 @@
             text-align: center;
             margin-bottom: 30px;
             animation: fadeInDown 0.8s ease-out;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg-primary);
             padding: 25px;
             border-radius: 20px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -70,7 +122,7 @@
         .title {
             font-family: 'Permanent Marker', cursive;
             font-size: 4rem;
-            color: #2C3E50;
+            color: var(--text-primary);
             text-shadow: 
                 3px 3px 0px #FF6B6B,
                 6px 6px 0px #FFA500;
@@ -81,14 +133,14 @@
         .subtitle {
             font-family: 'Roboto', sans-serif;
             font-size: 1.3rem;
-            color: #555;
+            color: var(--text-secondary);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
         .game-board {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--bg-primary);
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
@@ -102,10 +154,51 @@
         .section-title {
             font-family: 'Permanent Marker', cursive;
             font-size: 2rem;
-            color: #2C3E50;
+            color: var(--text-primary);
             text-align: center;
             margin-bottom: 25px;
             text-shadow: 2px 2px 0px rgba(255, 107, 107, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .toggle-section-btn {
+            background: linear-gradient(180deg, #FFA500 0%, #FF8C00 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-section-btn:hover {
+            background: linear-gradient(180deg, #FF8C00 0%, #FFA500 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-section-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .add-player-content {
+            max-height: 200px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease, margin 0.4s ease;
+            opacity: 1;
+        }
+
+        .add-player-content.hidden {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
         }
 
         .player-input-group {
@@ -120,16 +213,17 @@
             padding: 15px 20px;
             font-size: 1.1rem;
             font-family: 'Roboto', sans-serif;
-            background: white;
-            border: 3px solid #4169E1;
+            background: var(--input-bg);
+            border: 3px solid var(--input-border);
             border-radius: 10px;
-            color: #2C3E50;
+            color: var(--input-text);
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .player-input::placeholder {
-            color: #999;
+            color: var(--text-secondary);
+            opacity: 0.6;
         }
 
         .player-input:focus {
@@ -176,13 +270,16 @@
         }
 
         .player-card {
-            background: linear-gradient(180deg, #34495E 0%, #2C3E50 60%);
+            background: linear-gradient(180deg, var(--podium-bottom) 0%, var(--podium-top) 60%);
             border-radius: 15px;
             padding: 0;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
             transition: all 0.3s ease;
-            animation: slideIn 0.5s ease-out;
             overflow: hidden;
+        }
+
+        .player-card.new-player {
+            animation: slideIn 0.5s ease-out;
         }
 
         .player-card:hover {
@@ -191,14 +288,14 @@
         }
 
         .player-podium-top {
-            background: #2C3E50;
+            background: var(--podium-top);
             padding: 20px;
             text-align: center;
         }
 
         .player-name {
             font-family: 'Roboto', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: white;
             text-transform: uppercase;
@@ -210,9 +307,9 @@
             background: #1a1a1a;
             border: 4px solid #444;
             border-radius: 10px;
-            padding: 25px 15px;
+            padding: 30px 20px;
             margin: 15px auto;
-            max-width: 200px;
+            max-width: 250px;
             box-shadow: 
                 inset 0 0 20px rgba(0, 0, 0, 0.8),
                 0 0 15px rgba(255, 0, 0, 0.3);
@@ -220,14 +317,14 @@
 
         .led-number {
             font-family: 'Orbitron', 'Courier New', monospace;
-            font-size: 5.5rem;
+            font-size: 7rem;
             font-weight: 900;
             color: #FF3333;
             text-align: center;
             text-shadow: 
-                0 0 10px #FF3333,
-                0 0 20px #FF3333,
-                0 0 30px #FF0000;
+                0 0 15px #FF3333,
+                0 0 30px #FF3333,
+                0 0 45px #FF0000;
             line-height: 1;
             letter-spacing: 3px;
         }
@@ -341,15 +438,28 @@
             background: linear-gradient(180deg, #00A0A8 0%, #00CED1 100%);
         }
 
+        .btn-theme {
+            background: linear-gradient(180deg, #BA55D3 0%, #9932CC 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-theme:hover {
+            background: linear-gradient(180deg, #9932CC 0%, #BA55D3 100%);
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #666;
+            color: var(--empty-state-text);
             font-size: 1.2rem;
             font-weight: 500;
-            background: rgba(240, 240, 240, 0.5);
+            background: var(--empty-state-bg);
             border-radius: 15px;
-            border: 3px dashed #ccc;
+            border: 3px dashed var(--empty-state-border);
         }
 
         @keyframes fadeIn {
@@ -411,11 +521,21 @@
             }
 
             .led-number {
-                font-size: 4rem;
+                font-size: 5rem;
             }
 
             .led-display {
-                max-width: 180px;
+                max-width: 220px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                flex-wrap: wrap;
+            }
+
+            .toggle-section-btn {
+                font-size: 0.9rem;
+                padding: 6px 12px;
             }
         }
 
@@ -424,8 +544,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
-            border: 8px solid #FF6B6B;
+            background: var(--winner-bg);
+            border: 8px solid var(--winner-border);
             border-radius: 20px;
             padding: 50px;
             z-index: 1000;
@@ -438,7 +558,7 @@
         .winner-banner h2 {
             font-family: 'Permanent Marker', cursive;
             font-size: 3rem;
-            color: #2C3E50;
+            color: var(--text-primary);
             margin-bottom: 20px;
             text-shadow: 
                 3px 3px 0px #FF6B6B,
@@ -447,7 +567,7 @@
 
         .winner-banner p {
             font-size: 1.5rem;
-            color: #555;
+            color: var(--text-secondary);
             margin-bottom: 30px;
             font-weight: 700;
         }
@@ -476,6 +596,76 @@
             z-index: 999;
             animation: fadeIn 0.3s ease-out;
         }
+
+        .confirm-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-primary);
+            border: 5px solid #4169E1;
+            border-radius: 20px;
+            padding: 40px;
+            z-index: 1000;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: popIn 0.3s ease-out;
+            max-width: 90%;
+            width: 450px;
+        }
+
+        .confirm-popup h3 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px rgba(65, 105, 225, 0.3);
+        }
+
+        .confirm-popup p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(180deg, #FF6B6B 0%, #E85555 100%);
+            color: white;
+            min-width: 120px;
+        }
+
+        .btn-confirm:hover {
+            background: linear-gradient(180deg, #E85555 0%, #FF6B6B 100%);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(180deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+            min-width: 120px;
+        }
+
+        .btn-cancel:hover {
+            background: linear-gradient(180deg, #7f8c8d 0%, #95a5a6 100%);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -487,16 +677,23 @@
 
         <div class="game-board">
             <div class="players-section">
-                <h2 class="section-title">Add Player</h2>
-                <div class="player-input-group">
-                    <input 
-                        type="text" 
-                        id="playerNameInput" 
-                        class="player-input" 
-                        placeholder="Enter player name..."
-                        maxlength="30"
-                    >
-                    <button class="btn btn-primary" onclick="addPlayer()">Add Player</button>
+                <h2 class="section-title">
+                    Add Player
+                    <button class="toggle-section-btn" onclick="toggleAddPlayer()" id="toggleAddPlayerBtn">
+                        Hide
+                    </button>
+                </h2>
+                <div class="add-player-content" id="addPlayerContent">
+                    <div class="player-input-group">
+                        <input 
+                            type="text" 
+                            id="playerNameInput" 
+                            class="player-input" 
+                            placeholder="Enter player name..."
+                            maxlength="30"
+                        >
+                        <button class="btn btn-primary" onclick="addPlayer()">Add Player</button>
+                    </div>
                 </div>
             </div>
 
@@ -513,15 +710,131 @@
                 <button class="btn btn-secondary" onclick="resetAllScores()">Reset Scores</button>
                 <button class="btn btn-secondary" onclick="clearAllPlayers()">Clear All Players</button>
                 <button class="btn btn-primary" onclick="announceWinner()">Announce Winner!</button>
+                <button class="btn btn-theme" onclick="toggleTheme()" id="themeToggle">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText">Dark Mode</span>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
         let players = [];
+        let confirmCallback = null;
+        let newlyAddedPlayerId = null;
+
+        // Custom confirmation popup
+        function showConfirm(title, message, onConfirm) {
+            confirmCallback = onConfirm;
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.id = 'confirmOverlay';
+            
+            const popup = document.createElement('div');
+            popup.className = 'confirm-popup';
+            
+            // If no callback, show only OK button (alert mode)
+            const buttonsHTML = onConfirm 
+                ? `<button class="btn btn-cancel" onclick="closeConfirm(false)">Cancel</button>
+                   <button class="btn btn-confirm" onclick="closeConfirm(true)">Confirm</button>`
+                : `<button class="btn btn-primary" onclick="closeConfirm(false)">OK</button>`;
+            
+            popup.innerHTML = `
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <div class="confirm-buttons">
+                    ${buttonsHTML}
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            // Close on overlay click
+            overlay.addEventListener('click', () => closeConfirm(false));
+        }
+
+        function closeConfirm(confirmed) {
+            const overlay = document.getElementById('confirmOverlay');
+            const popup = document.querySelector('.confirm-popup');
+            
+            if (overlay) overlay.remove();
+            if (popup) popup.remove();
+            
+            if (confirmed && confirmCallback) {
+                confirmCallback();
+            }
+            
+            confirmCallback = null;
+        }
+
+        // Toggle Add Player Section
+        function toggleAddPlayer() {
+            const content = document.getElementById('addPlayerContent');
+            const btn = document.getElementById('toggleAddPlayerBtn');
+            const isHidden = content.classList.contains('hidden');
+            
+            if (isHidden) {
+                content.classList.remove('hidden');
+                btn.textContent = 'Hide';
+                localStorage.setItem('umActuallyAddPlayerVisible', 'true');
+            } else {
+                content.classList.add('hidden');
+                btn.textContent = 'Show';
+                localStorage.setItem('umActuallyAddPlayerVisible', 'false');
+            }
+        }
+
+        // Load add player section visibility
+        function loadAddPlayerVisibility() {
+            const isVisible = localStorage.getItem('umActuallyAddPlayerVisible');
+            const content = document.getElementById('addPlayerContent');
+            const btn = document.getElementById('toggleAddPlayerBtn');
+            
+            if (isVisible === 'false') {
+                content.classList.add('hidden');
+                btn.textContent = 'Show';
+            }
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('umActuallyTheme', 'dark');
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('umActuallyTheme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('umActuallyTheme');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            }
+        }
 
         // Load players from localStorage on page load
         window.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadAddPlayerVisibility();
+            
             const savedPlayers = localStorage.getItem('umActuallyPlayers');
             if (savedPlayers) {
                 players = JSON.parse(savedPlayers);
@@ -545,32 +858,49 @@
             const name = input.value.trim();
 
             if (name === '') {
-                alert('Please enter a player name!');
+                showConfirm(
+                    'Empty Name',
+                    'Please enter a player name!',
+                    null
+                );
                 return;
             }
 
             if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-                alert('This player already exists!');
+                showConfirm(
+                    'Player Exists',
+                    'This player already exists!',
+                    null
+                );
                 return;
             }
 
+            const newPlayerId = Date.now();
             players.push({
-                id: Date.now(),
+                id: newPlayerId,
                 name: name,
                 score: 0
             });
 
             input.value = '';
+            newlyAddedPlayerId = newPlayerId;
             savePlayers();
             renderPlayers();
         }
 
         function removePlayer(id) {
-            if (confirm('Are you sure you want to remove this player?')) {
-                players = players.filter(p => p.id !== id);
-                savePlayers();
-                renderPlayers();
-            }
+            const player = players.find(p => p.id === id);
+            const playerName = player ? player.name : 'this player';
+            
+            showConfirm(
+                'Remove Player?',
+                `Are you sure you want to remove ${playerName}?`,
+                () => {
+                    players = players.filter(p => p.id !== id);
+                    savePlayers();
+                    renderPlayers();
+                }
+            );
         }
 
         function updateScore(id, change) {
@@ -584,33 +914,53 @@
 
         function resetAllScores() {
             if (players.length === 0) {
-                alert('No players to reset!');
+                showConfirm(
+                    'No Players',
+                    'There are no players to reset!',
+                    null
+                );
                 return;
             }
 
-            if (confirm('Are you sure you want to reset all scores to 0?')) {
-                players.forEach(p => p.score = 0);
-                savePlayers();
-                renderPlayers();
-            }
+            showConfirm(
+                'Reset All Scores?',
+                'Are you sure you want to reset all scores to 0?',
+                () => {
+                    players.forEach(p => p.score = 0);
+                    savePlayers();
+                    renderPlayers();
+                }
+            );
         }
 
         function clearAllPlayers() {
             if (players.length === 0) {
-                alert('No players to clear!');
+                showConfirm(
+                    'No Players',
+                    'There are no players to clear!',
+                    null
+                );
                 return;
             }
 
-            if (confirm('Are you sure you want to remove all players?')) {
-                players = [];
-                savePlayers();
-                renderPlayers();
-            }
+            showConfirm(
+                'Clear All Players?',
+                'Are you sure you want to remove all players? This cannot be undone!',
+                () => {
+                    players = [];
+                    savePlayers();
+                    renderPlayers();
+                }
+            );
         }
 
         function announceWinner() {
             if (players.length === 0) {
-                alert('Add some players first!');
+                showConfirm(
+                    'No Players',
+                    'Add some players first!',
+                    null
+                );
                 return;
             }
 
@@ -665,16 +1015,14 @@
                 return;
             }
 
-            // Sort players by score (highest first)
-            const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
-
-            // Array of colors for the podium panels
+            // Don't sort - keep players in their original order
             const colors = ['orange', 'blue', 'red', 'yellow', 'green', 'purple'];
 
-            container.innerHTML = sortedPlayers.map((player, index) => {
+            container.innerHTML = players.map((player, index) => {
                 const colorClass = colors[index % colors.length];
+                const isNewPlayer = player.id === newlyAddedPlayerId ? 'new-player' : '';
                 return `
-                <div class="player-card">
+                <div class="player-card ${isNewPlayer}">
                     <div class="player-podium-top">
                         <div class="player-name">${escapeHtml(player.name)}</div>
                         <div class="led-display">
@@ -690,6 +1038,13 @@
                     </div>
                 </div>
             `}).join('');
+            
+            // Clear the newly added player ID after rendering
+            if (newlyAddedPlayerId !== null) {
+                setTimeout(() => {
+                    newlyAddedPlayerId = null;
+                }, 500); // Clear after animation completes
+            }
         }
 
         function escapeHtml(text) {
