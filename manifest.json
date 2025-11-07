@@ -2,7 +2,7 @@
   "name": "Um, Actually Score Tracker",
   "short_name": "Um, Actually",
   "description": "Score tracker for the Um, Actually trivia game show",
-  "start_url": "./um-actually-scorer.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a0b2e",
   "theme_color": "#FF6B6B",
