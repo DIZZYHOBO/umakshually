@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Um, Actually - Score Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;700;900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, 
+                #FF6B6B 0%, 
+                #FF6B6B 14%, 
+                #FFA500 14%, 
+                #FFA500 28%, 
+                #FFD700 28%, 
+                #FFD700 42%, 
+                #7FFF00 42%, 
+                #7FFF00 56%, 
+                #00CED1 56%, 
+                #00CED1 70%, 
+                #4169E1 70%, 
+                #4169E1 84%, 
+                #BA55D3 84%, 
+                #BA55D3 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease-out;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 4rem;
+            color: #2C3E50;
+            text-shadow: 
+                3px 3px 0px #FF6B6B,
+                6px 6px 0px #FFA500;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.3rem;
+            color: #555;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .game-board {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .players-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2rem;
+            color: #2C3E50;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 0px rgba(255, 107, 107, 0.5);
+        }
+
+        .player-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .player-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-family: 'Roboto', sans-serif;
+            background: white;
+            border: 3px solid #4169E1;
+            border-radius: 10px;
+            color: #2C3E50;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .player-input::placeholder {
+            color: #999;
+        }
+
+        .player-input:focus {
+            outline: none;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #FF6B6B 0%, #E85555 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(180deg, #E85555 0%, #FF6B6B 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .players-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .player-card {
+            background: linear-gradient(180deg, #34495E 0%, #2C3E50 60%);
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+            overflow: hidden;
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .player-podium-top {
+            background: #2C3E50;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .player-name {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .led-display {
+            background: #1a1a1a;
+            border: 4px solid #444;
+            border-radius: 10px;
+            padding: 25px 15px;
+            margin: 15px auto;
+            max-width: 200px;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .led-number {
+            font-family: 'Orbitron', 'Courier New', monospace;
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: #FF3333;
+            text-align: center;
+            text-shadow: 
+                0 0 10px #FF3333,
+                0 0 20px #FF3333,
+                0 0 30px #FF0000;
+            line-height: 1;
+            letter-spacing: 3px;
+        }
+
+        .player-color-panel {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .player-color-panel.color-orange {
+            background: linear-gradient(180deg, #FFA500 0%, #FF8C00 100%);
+        }
+
+        .player-color-panel.color-blue {
+            background: linear-gradient(180deg, #00CED1 0%, #00A0A8 100%);
+        }
+
+        .player-color-panel.color-red {
+            background: linear-gradient(180deg, #FF6B6B 0%, #E85555 100%);
+        }
+
+        .player-color-panel.color-yellow {
+            background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        .player-color-panel.color-green {
+            background: linear-gradient(180deg, #7FFF00 0%, #5FD700 100%);
+        }
+
+        .player-color-panel.color-purple {
+            background: linear-gradient(180deg, #BA55D3 0%, #9932CC 100%);
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-score {
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+            font-weight: 900;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: #2C3E50;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-score:hover {
+            background: #FFD700;
+            transform: scale(1.1);
+        }
+
+        .btn-score:active {
+            transform: scale(0.95) translateY(2px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-remove {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            background: #E85555;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-remove:hover {
+            background: #C74444;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-remove:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(180deg, #00CED1 0%, #00A0A8 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(180deg, #00A0A8 0%, #00CED1 100%);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-size: 1.2rem;
+            font-weight: 500;
+            background: rgba(240, 240, 240, 0.5);
+            border-radius: 15px;
+            border: 3px dashed #ccc;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .game-board {
+                padding: 20px;
+            }
+
+            .players-list {
+                grid-template-columns: 1fr;
+            }
+
+            .player-input-group {
+                flex-direction: column;
+            }
+
+            .player-input {
+                width: 100%;
+            }
+
+            .led-number {
+                font-size: 4rem;
+            }
+
+            .led-display {
+                max-width: 180px;
+            }
+        }
+
+        .winner-banner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 8px solid #FF6B6B;
+            border-radius: 20px;
+            padding: 50px;
+            z-index: 1000;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: winnerPop 0.5s ease-out;
+            max-width: 90%;
+        }
+
+        .winner-banner h2 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 3rem;
+            color: #2C3E50;
+            margin-bottom: 20px;
+            text-shadow: 
+                3px 3px 0px #FF6B6B,
+                6px 6px 0px #FFA500;
+        }
+
+        .winner-banner p {
+            font-size: 1.5rem;
+            color: #555;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        @keyframes winnerPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(10deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Um, Actually</h1>
+            <p class="subtitle">Score Tracker</p>
+        </div>
+
+        <div class="game-board">
+            <div class="players-section">
+                <h2 class="section-title">Add Player</h2>
+                <div class="player-input-group">
+                    <input 
+                        type="text" 
+                        id="playerNameInput" 
+                        class="player-input" 
+                        placeholder="Enter player name..."
+                        maxlength="30"
+                    >
+                    <button class="btn btn-primary" onclick="addPlayer()">Add Player</button>
+                </div>
+            </div>
+
+            <div class="players-section">
+                <h2 class="section-title">Scoreboard</h2>
+                <div id="playersList" class="players-list">
+                    <div class="empty-state">
+                        No players yet! Add some players to start tracking scores!
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="btn btn-secondary" onclick="resetAllScores()">Reset Scores</button>
+                <button class="btn btn-secondary" onclick="clearAllPlayers()">Clear All Players</button>
+                <button class="btn btn-primary" onclick="announceWinner()">Announce Winner!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let players = [];
+
+        // Load players from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedPlayers = localStorage.getItem('umActuallyPlayers');
+            if (savedPlayers) {
+                players = JSON.parse(savedPlayers);
+                renderPlayers();
+            }
+
+            // Add enter key listener for player input
+            document.getElementById('playerNameInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addPlayer();
+                }
+            });
+        });
+
+        function savePlayers() {
+            localStorage.setItem('umActuallyPlayers', JSON.stringify(players));
+        }
+
+        function addPlayer() {
+            const input = document.getElementById('playerNameInput');
+            const name = input.value.trim();
+
+            if (name === '') {
+                alert('Please enter a player name!');
+                return;
+            }
+
+            if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+                alert('This player already exists!');
+                return;
+            }
+
+            players.push({
+                id: Date.now(),
+                name: name,
+                score: 0
+            });
+
+            input.value = '';
+            savePlayers();
+            renderPlayers();
+        }
+
+        function removePlayer(id) {
+            if (confirm('Are you sure you want to remove this player?')) {
+                players = players.filter(p => p.id !== id);
+                savePlayers();
+                renderPlayers();
+            }
+        }
+
+        function updateScore(id, change) {
+            const player = players.find(p => p.id === id);
+            if (player) {
+                player.score += change;
+                savePlayers();
+                renderPlayers();
+            }
+        }
+
+        function resetAllScores() {
+            if (players.length === 0) {
+                alert('No players to reset!');
+                return;
+            }
+
+            if (confirm('Are you sure you want to reset all scores to 0?')) {
+                players.forEach(p => p.score = 0);
+                savePlayers();
+                renderPlayers();
+            }
+        }
+
+        function clearAllPlayers() {
+            if (players.length === 0) {
+                alert('No players to clear!');
+                return;
+            }
+
+            if (confirm('Are you sure you want to remove all players?')) {
+                players = [];
+                savePlayers();
+                renderPlayers();
+            }
+        }
+
+        function announceWinner() {
+            if (players.length === 0) {
+                alert('Add some players first!');
+                return;
+            }
+
+            const maxScore = Math.max(...players.map(p => p.score));
+            const winners = players.filter(p => p.score === maxScore);
+
+            let message;
+            if (winners.length === 1) {
+                message = `${winners[0].name} wins with ${winners[0].score} points!`;
+            } else if (winners.length === players.length) {
+                message = `It's a ${winners.length}-way tie! Everyone has ${maxScore} points!`;
+            } else {
+                const winnerNames = winners.map(w => w.name).join(' and ');
+                message = `${winnerNames} tie with ${maxScore} points!`;
+            }
+
+            showWinnerBanner(winners, message);
+        }
+
+        function showWinnerBanner(winners, message) {
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            
+            const banner = document.createElement('div');
+            banner.className = 'winner-banner';
+            banner.innerHTML = `
+                <h2>🏆 Winner${winners.length > 1 ? 's' : ''}! 🏆</h2>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="closeWinnerBanner()">Close</button>
+            `;
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(banner);
+        }
+
+        function closeWinnerBanner() {
+            const overlay = document.querySelector('.overlay');
+            const banner = document.querySelector('.winner-banner');
+            if (overlay) overlay.remove();
+            if (banner) banner.remove();
+        }
+
+        function renderPlayers() {
+            const container = document.getElementById('playersList');
+
+            if (players.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        No players yet! Add some players to start tracking scores!
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort players by score (highest first)
+            const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+
+            // Array of colors for the podium panels
+            const colors = ['orange', 'blue', 'red', 'yellow', 'green', 'purple'];
+
+            container.innerHTML = sortedPlayers.map((player, index) => {
+                const colorClass = colors[index % colors.length];
+                return `
+                <div class="player-card">
+                    <div class="player-podium-top">
+                        <div class="player-name">${escapeHtml(player.name)}</div>
+                        <div class="led-display">
+                            <div class="led-number">${player.score}</div>
+                        </div>
+                    </div>
+                    <div class="player-color-panel color-${colorClass}">
+                        <div class="player-controls">
+                            <button class="btn-score" onclick="updateScore(${player.id}, -1)" title="Decrease score">−</button>
+                            <button class="btn-score" onclick="updateScore(${player.id}, 1)" title="Increase score">+</button>
+                            <button class="btn btn-remove" onclick="removePlayer(${player.id})" title="Remove player">✕</button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
