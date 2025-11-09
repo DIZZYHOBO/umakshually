@@ -20,7 +20,9 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;700;900&family=Sixtyfour:wght@400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Roboto:wght@400;700;900&family=Sixtyfour&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -317,9 +319,12 @@
             color: #FF3333;
             text-align: center;
             text-shadow: none;
-            line-height: 0.9;
+            line-height: 1;
             letter-spacing: 0;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .led-number.double-digit {
@@ -333,6 +338,7 @@
         @media (min-width: 768px) {
             .led-number {
                 font-size: 28rem;
+                line-height: 1;
             }
             
             .led-number.double-digit {
