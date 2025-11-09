@@ -1,7 +1,8 @@
 const CACHE_NAME = 'um-actually-v1';
 const urlsToCache = [
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './img/logo.png'
 ];
 
 // Install service worker and cache files
